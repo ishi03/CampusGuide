@@ -1,0 +1,241 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <title>Somaiya routes map</title>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="demo.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="../template.css" />
+    <script type="text/javascript" src='../test-credentials.js'></script> -->
+    <link  rel="stylesheet" href="/static/css/main.css"/>
+    <link rel="stylesheet" href= "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+  <script>window.ENV_VARIABLE = 'developer.here.com'</script><script src='../iframeheight.js'></script></head>
+  <script type="text/javascript">
+    var data = JSON.parse(`{{ data | tojson }}`); 
+    console.log(data);
+   </script>
+  <body id="markers-on-the-map">
+    <div class="page-header">
+        <h1>Welcome to Somaiya Vidyavihar!</h1>
+    </div>
+    <p>Hum honge kamyab, ekdin
+      {{data[0].name}}
+    </p>
+    <div id="tgl" class="container">
+      <div class="btn" style="display:inline-block;">
+    <button class="bbtn" onclick="getLocation()">Get your location</button>
+    <p id="demo"></p>
+    </div>
+     
+        <label class="switch1">
+        <input id = "toggle-one" type="checkbox" data-toggle="toggle" class="switch1-input" onclick="myMap()">
+        <span class="switch1-label" data-on="Educational Buildings" data-off="Educational Buildings"></span>
+        <span class="switch1-handle"></span>
+      </label>
+      <label class="switch2">
+        <input id = "toggle-two" type="checkbox" data-toggle="toggle" class="switch2-input" onclick="myMap()">
+        <span class="switch2-label" data-on="Hostels" data-off="Hostels"></span>
+        <span class="switch2-handle"></span>
+      </label>
+      <label class="switch3">
+        <input id = "toggle-three" type="checkbox" data-toggle="toggle" class="switch3-input" onclick="myMap()">
+        <span class="switch3-label" data-on="Canteens" data-off="Canteens"></span>
+        <span class="switch3-handle"></span>
+      </label>
+      <label class="switch4">
+        <input id = "toggle-four" type="checkbox" data-toggle="toggle" class="switch4-input" onclick="myMap()">
+        <span class="switch4-label" data-on="Sports" data-off="Sports"></span>
+        <span class="switch4-handle"></span>
+      </label>
+     
+       <div class="search-bar"> 
+      <form method="post" action="" >
+              <input type="text" placeholder="Search..." name="book">
+              <button class="search_btn" type="submit" id="searchbtn" style="background-color:#b7292e;color:white"><i class="fa fa-search" aria-hidden="true"></i></i></button>
+      </form>
+       </div>
+    </div>
+    <div id="map" style="width:700px;height:700px;"></div>
+    
+    <h3>heyy</h3>
+    <button onclick="getLocation()">Try It</button>
+    <p id="demo"></p>
+    
+    <!-- <script type="text/javascript" src='demo.js'></script> -->
+  </body>
+</html> 
+
+ <script type='text/javascript'>  
+  function setInteractive(map){
+  // get the vector provider from the base layer
+  var provider = map.getBaseLayer().getProvider();
+  // get the style object for the base layer
+  var style = provider.getStyle();
+
+  var changeListener = (evt) => {
+    if (style.getState() === H.map.Style.State.READY) {
+      style.removeEventListener('change', changeListener);
+
+      // enable interactions for the desired map features
+      style.setInteractive(['places', 'places.populated-places'], true);
+
+      // add an event listener that is responsible for catching the
+      // 'tap' event on the feature and showing the infobubble
+      provider.addEventListener('tap', onTap);
+    }
+  };
+  style.addEventListener('change', changeListener);
+}
+// Instantiate a map and platform object:
+var platform = new H.service.Platform({
+    'apikey': 'vtU0g5VK6cA3RZQSS0fcqx3vEGDdUMxkWE7MHkvDarE',
+    'app_id': 'pzBmVrAlgYSJ5xJXwq82'
+  });
+  // Retrieve the target element for the map:
+  var targetElement = document.getElementById('map');
+  
+  // Get the default map types from the platform object:
+  var defaultLayers = platform.createDefaultLayers();
+  
+  // Instantiate the map:
+  var map = new H.Map(
+    document.getElementById('map'),
+    defaultLayers.vector.normal.map,
+    {
+      zoom: 18,
+      center: { lat: 19.072742, lng: 72.9006 },
+      pixelRatio: window.devicePixelRatio || 1
+    });
+  window.addEventListener('resize', () => map.getViewPort().resize());
+  var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+var bubble;
+/**
+ * @param {H.mapevents.Event} e The event object
+ */
+function onTap(evt) {
+  // calculate infobubble position from the cursor screen coordinates
+  let position = map.screenToGeo(
+    evt.currentPointer.viewportX,
+    evt.currentPointer.viewportY
+  );
+  // read the properties associated with the map feature that triggered the event
+  let props = evt.target.getData().properties;
+
+  // create a content for the infobubble
+  let content = '<div style="width:250px">It is a ' + props.kind + ' ' + (props.kind_detail || '') +
+    (props.population ? '<br /> population: ' + props.population : '') +
+    '<br /> local name is ' + props['name'] +
+    (props['name:ar'] ? '<br /> name in Arabic is '+ props['name:ar'] : '') + '</div>';
+
+  // Create a bubble, if not created yet
+  if (!bubble) {
+    bubble = new H.ui.InfoBubble(position, {
+      content: content
+    });
+    ui.addBubble(bubble);
+  } else {
+    // Reuse existing bubble object
+    bubble.setPosition(position);
+    bubble.setContent(content);
+    bubble.open();
+  }
+}
+
+// Now use the map as required...
+
+
+var x = document.getElementById("demo");
+var position_x;
+var position_y;
+var myposition;
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+  
+  
+
+  // Define a callback function to process the routing response:
+  var onResult = function(result) {
+    // ensure that at least one route was found
+    if (result.routes.length) {
+      result.routes[0].sections.forEach((section) => {
+           // Create a linestring to use as a point source for the route line
+          let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+  
+          // Create a polyline to display the route:
+          let routeLine = new H.map.Polyline(linestring, {
+            style: { strokeColor: 'blue', lineWidth: 3 }
+          });
+  
+          // Create a marker for the start point:
+          let startMarker = new H.map.Marker(section.departure.place.location);
+  
+          // Create a marker for the end point:
+          let endMarker = new H.map.Marker(section.arrival.place.location);
+  
+          // Add the route polyline and the two markers to the map:
+          map.addObjects([routeLine, startMarker, endMarker]);
+  
+          // Set the map's viewport to make the whole route visible:
+          map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()});
+      });
+    }
+  };
+  
+  // Get an instance of the routing service version 8:
+  var router = platform.getRoutingService(null, 8);
+  
+    function showPosition(position) {
+      position_x= position.coords.latitude;
+      position_y= position.coords.longitude;
+      x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;
+      myposition=(position_x.toString()).concat(',',(position_y.toString()))
+      finalposition=((data[0].x_coord).toString()).concat(',',((data[0].y_coord).toString()))
+      console.log(myposition)
+      var routingParameters2 = {
+        'routingMode': 'fast',
+        'transportMode': 'car',
+        // The start point of the route:
+        'origin': myposition,
+        // The end point of the route:
+        //'destination':myposition, 19.072939,72.900038' {lat:parseFloat(data[0].x_coord), lng:parseFloat(data[0].x_coord)}
+        'destination': finalposition,
+        // Include the route shape in the response
+        'return': 'polyline'
+      };
+      
+      router.calculateRoute(routingParameters2, onResult,
+      function(error) {
+        alert(error.message);
+      });
+  }
+  function addMarkersToMap(map) {
+    var LocationOfMarker = {lat:parseFloat(data[0].x_coord), lng:parseFloat(data[0].y_coord)};
+    var parisMarker = new H.map.Marker(LocationOfMarker);
+    map.addObject(parisMarker);
+    alert(parseFloat(data[0].x_coord));
+  }
+  var LocationOfMarker = { lat: 19.072939, lng: 72.900038 };
+  var icon = new H.map.Icon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+  var marker = new H.map.Marker(LocationOfMarker, { icon: icon });
+  map.addObject(marker);
+  
+  
+  // Now use the map as required...
+  setInteractive(map);
+  window.onload = function () {
+    addMarkersToMap(map);
+  }
+</script>

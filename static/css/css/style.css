@@ -1,0 +1,117 @@
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.container
+{
+    width: 100%;
+    padding-left: 5%;
+}
+
+
+.header{
+  width: 100%;
+  height: 15vh;
+  margin: auto;
+  display: flex;
+  align-items: center;
+}
+
+.logo{
+  width: 80px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.header h1{
+    color:#8d0925;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 125%;
+    letter-spacing: 2px;
+    margin-left: 10px;
+}
+
+.content p1{
+  font-size: 20px;
+  color: #860924;
+  padding: 7%;
+}
+
+.left{
+  top: 30%;
+    position:absolute;
+    width: 60%;
+    padding-right:4%;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 60px;
+  height: 15px;
+  width: 100%;
+  align-items: center;
+  margin-left: 2%;
+}
+
+.content .btn{
+  display: inline;
+  background: linear-gradient(45deg, #f02d6e, #6b0018);
+  border-radius: 6px;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: #fff;
+  box-shadow: 3px 8px 22px rgb(94,28,68,0.15);
+}
+
+body{
+  margin: 0;
+  width:100%;
+  padding: 0;
+  background: linear-gradient(rgba(255, 255, 255, 0.966),rgb(121, 2, 32));
+  
+}
+
+h1{
+  color:rgb(7, 70, 78) ;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 30px;
+  letter-spacing: 2px;
+  margin-left: 10px;
+}
+
+.home__title{
+  color:#8a0929;
+  font-size: 60px;
+}
+
+.right_slider{
+top:30%;
+position: absolute;
+right:80; 
+width: 600px;
+height:300px;
+background: url("/static/img2.jpg");
+animation: slide 20s infinite;
+} 
+@keyframes slide{
+ 25%{
+   background: url("/static/img1.jpg");
+   object-fit: cover;
+ }
+ 50%{
+   background: url("/static/img3.jpg");
+   object-fit: cover;
+ }
+ 75%{
+   background: url("/static/img4.jpg");
+   object-fit: cover;
+ }
+ 100%{
+   background: url("/static/img2.jpg");
+   object-fit: cover;
+ }
+}
