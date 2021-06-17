@@ -1,101 +1,199 @@
-body{  
-    background-color:rgb(252, 252, 252);
-    font-family: Arial, Helvetica, sans-serif;
-    font-size:125%;
-  }
+.search_box {
+  box-sizing: content-box;
+}
 h1{
-    text-align:center;
-    background-color:rgb(124, 6, 45);
-    color:rgb(255, 255, 255);
-  } 
-
-.grid-child{
-  padding:5%;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 60px;
-    height: 15px;
-    width: 100%;
-    align-items: center;
-}
-
-
-.search_box{
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transition: translate(-50%,-50%);
-  background:rgb(124, 6, 45) ;
-  height: 50px;
-  border-radius: 60px;
-  padding:10px;
-  display:flex;
-  width: 230px;
-  align-items: center;
-}
-
-
-.search_btn{
-  color: brown;
-  float: right;
-  width: 30px;
-  height: 30px;
-  background:rgba(43, 30, 221, 0.192);
-  display:flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.search_txt{
-  border:none;
-  background:rgba(43, 30, 221, 0.192);
-  outline: none;
-  float:left;
-  padding: 0;
+  background-color: #b7292e;
+  margin-top:30px;
   color: white;
-  font-size:16px;
-  transition:0.4s;
-  line-height: 60px;
-  width:0;
-
+  font-family:Arial, Helvetica, sans-serif;;
+  text-align: center;
+}
+.search-bar{
+  display:inline-block; margin-left:30px; margin-top: 28px;
+}
+.bbtn{
+  background-color: #b7292e;
+  padding:5px 10px;
+  color: white;
+  margin-top: 12px;
+}
+input[type=text] {
+  width: 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: white;
+  /* background-image: url('magglass2.png'); */
+  background-size: 100%;
+  background-position: 10px 10px; 
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 40px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
 }
 
-.Description{
+input[type=text]:focus {
+  width: 240px;
+}
+
+body {
+  background-color: whitesmoke;
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  padding:10px;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container > .switch1,.switch2 ,.switch3,.switch4 {
+  margin: 22px auto;
+  margin-left: 150px;
+  display:inline-block;
+  margin-top: 35px;
+  text-align: right;
+}
+
+.switch1,.switch2,.switch3,.switch4 {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  width: 100px;
+  height: 36px;
+  padding: 1px;
+  border-radius: 4.5px;
+  cursor: pointer;
+}
+
+.switch1-input,.switch2-input,.switch3-input,.switch4-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+.switch1-label,.switch2-label,.switch3-label,.switch4-label {
+  position: relative;
+  display: block;
+  height: inherit;
+  font-size: 10px;
+  text-transform: uppercase;
+  background:  #d4c9c7;/* changes colour of toggle in initial state*/
+  border-radius: inherit;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+  -webkit-transition: 0.15s ease-out;
+  -moz-transition: 0.15s ease-out;
+  -o-transition: 0.15s ease-out;
+  transition: 0.15s ease-out;
+  -webkit-transition-property: opacity background;
+  -moz-transition-property: opacity background;
+  -o-transition-property: opacity background;
+  transition-property: opacity background;
+}
+
+.switch1-label:before,.switch2-label:before,.switch3-label:before,.switch4-label:before, .switch1-label:after,.switch2-label:after,.switch3-label:after,.switch4-label:after {
+  position: absolute;
+  top:50%;
+  margin-top: -.5em;
+  line-height: 1;
+  -webkit-transition: inherit;
+  -moz-transition: inherit;
+  -o-transition: inherit;
+  transition: inherit;
+}
+.switch1-label:before,.switch2-label:before,.switch3-label:before,.switch4-label:before {
+  content: attr(data-off);
+  right: 10px;
+  color: #000;
+  text-shadow: 0 1px #3c404375;
+}
+.switch1-label:after ,.switch2-label:after ,.switch3-label:after ,.switch4-label:after {
+  content: attr(data-on);
+  left: 40px;
+  color: rgb(0 0 0);
+  text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+}
+.switch1-input:checked ~ .switch1-label{
+  background:  rgb(75, 182, 209);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 61%), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+.switch2-input:checked ~ .switch2-label{
+  background: rgb(243, 89, 222);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 61%), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+.switch3-input:checked ~ .switch3-label{
+  background:  rgb(247, 250, 48);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 61%), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+.switch4-input:checked ~ .switch4-label{
+  background: rgb(91, 236, 55);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 61%), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+.switch1-input,.switch2-input,.switch3-input,.switch4-input:checked ~ .switch1-label,.switch2-label,.switch3-label,.switch4-label:before {
+  opacity: 0;
+}
+.switch1-input,.switch2-input,.switch3-input,.switch4-input:checked ~ .switch1-label,.switch2-label,.switch3-label,.switch4-label:after {
+  opacity: 1;
+}
+
+.switch1-handle,.switch2-handle ,.switch3-handle ,.switch4-handle  {
+  position: absolute;
+  top: 1px;
+  left: -28px; /* edductnal buildings leftside move,toggle */
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 3px;
+  box-shadow: 1px 1px 7px rgb(0 0 0 / 63%);
+  background-image: -webkit-linear-gradient(top, white 40%, #f0f0f0);
+  background-image: -moz-linear-gradient(top, white 40%, #f0f0f0);
+  background-image: -o-linear-gradient(top, white 40%, #f0f0f0);
+  background-image: linear-gradient(to bottom, white 40%, #f0f0f0);
+  -webkit-transition: left 0.15s ease-out;
+  -moz-transition: left 0.15s ease-out;
+  -o-transition: left 0.15s ease-out;
+  transition: left 0.15s ease-out;
+}
+.switch1-handle:before,.switch2-handle:before,.switch3-handle:before ,.switch4-handle :before {
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
-  transition: translate(-50%,-50%);
-  background:rgba(231, 138, 186, 0.356) ;
-  height: 300px;
-  border-radius: 60px;
-  width: 300px;
-  color: rgba(226, 9, 99, 0.966);
-  display:flex;
-  text-align: left;
+  margin: -6px 0 0 -6px;
+  width: 12px;
+  height: 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+  background-image: -webkit-linear-gradient(top, #eeeeee, white);
+  background-image: -moz-linear-gradient(top, #eeeeee, white);
+  background-image: -o-linear-gradient(top, #eeeeee, white);
+  background-image: linear-gradient(to bottom, #eeeeee, white);
+}
+.switch1-input:checked ~ .switch1-handle,.switch2-input:checked ~ .switch2-handle,.switch3-input:checked ~ .switch3-handle,.switch4-input:checked ~ .switch4-handle{
+  left: 100px; /*right sode move toggle */
+  box-shadow: -1px 1px 5px rgb(0 0 0 / 79%)
+}
+.switch-green > .switch-input:checked ~ .switch-label {
+  background: #4fb845;
 }
 
-.item1 { grid-area: head; text-align: center;}
-.item2 { grid-area: image; align-content:center; }
-.item3 { grid-area: des; }
-
 .Description-container {
-  display: grid;
-  position: absolute;
-    top: 50%;
-   left: 50%;
-  grid-template-areas:
-    'head head head head head'
-    'image image image image image'
-    'des des des des des';
-  grid-gap: 10px;
-  align-items: center;
-  background-color: rgb(124, 6, 45);
-  padding:15px 15px;
-  border-radius: 60px;
-  margin-right: 5%;
-  color:rgb(255, 255, 255);
+align-items: center;
+background-color: #b7292e;
+padding:10px;
+border-radius: 3px;
+margin:2%;
+color:rgb(255, 255, 255);
 }
 

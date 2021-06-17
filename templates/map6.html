@@ -1,0 +1,455 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <title>Somaiya routes map</title>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <link  rel="stylesheet" href="/static/css/main.css"/>
+    <link rel="stylesheet" href= "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+  <script>window.ENV_VARIABLE = 'developer.here.com'</script><script src='../iframeheight.js'></script></head>
+  <script type="text/javascript">
+    var data = JSON.parse(`{{ data | tojson }}`);
+    var sugg = JSON.parse(`{{ sugg | tojson }}`);
+    var loglist = JSON.parse(`{{ loglist | tojson }}`); 
+    console.log(data);
+   </script>
+  <body id="markers-on-the-map" >
+    <div> <a href="http://127.0.0.1:5000" class="bbtn" style="background-color:#b7292e;color:white">HOME</a>
+    </div>
+    <div class="page-header">
+        <h1>Welcome to Somaiya Vidyavihar!</h1>
+    </div>
+    
+    <div id="tgl" class="container">
+      <div class="btn" style="display:inline-block;">
+    
+    <p id="demo"></p>
+    
+    </div>
+     
+        <label class="switch1">
+        <input id = "toggle-one" type="checkbox" data-toggle="toggle" class="switch1-input" onclick="myMap()">
+        <span class="switch1-label" data-on="Educational Buildings" data-off="Educational Buildings"></span>
+        <span class="switch1-handle"></span>
+      </label>
+      <label class="switch2">
+        <input id = "toggle-two" type="checkbox" data-toggle="toggle" class="switch2-input" onclick="myMap()">
+        <span class="switch2-label" data-on="Hostels" data-off="Hostels"></span>
+        <span class="switch2-handle"></span>
+      </label>
+      <label class="switch3">
+        <input id = "toggle-three" type="checkbox" data-toggle="toggle" class="switch3-input" onclick="myMap()">
+        <span class="switch3-label" data-on="Canteens" data-off="Canteens"></span>
+        <span class="switch3-handle"></span>
+      </label>
+      <label class="switch4">
+        <input id = "toggle-four" type="checkbox" data-toggle="toggle" class="switch4-input" onclick="myMap()">
+        <span class="switch4-label" data-on="Sports" data-off="Sports"></span>
+        <span class="switch4-handle"></span>
+      </label>
+     
+       <div class="search-bar"> 
+      <form method="post" action="" >
+              <input type="text" placeholder="Search..." name="book">
+              <button class="search_btn" type="submit" id="searchbtn" style="background-color:#b7292e;color:white"><i class="fa fa-search" aria-hidden="true"></i></i></button>
+      </form>
+       </div>
+    </div>
+    <p>{{sugg[0]}}</p>
+    
+      <form method="post" action="">
+        <button class="search_btn" type="submit" id="searchbtn" style="background-color:#b7292e;color:white;margin-left:130px">Go</button>
+          <select name="book">
+            <option value="none" selected disabled hidden>Top Searches</option>
+             <option value={{loglist[0]}}>{{loglist[0]}}</option>
+             <option value={{loglist[1]}}>{{loglist[1]}}</option>
+             <option value={{loglist[2]}}>{{loglist[2]}}</option>
+          </select>
+        </form>
+    <div id="map" style="margin-left:7%;width:1250px;height:700px;"></div>
+    <div class="Description-container">
+      {% for item in data %}
+           <div id="cd" ></div>    
+      {% endfor %}
+      </div>
+      <section class="borders-sec" style="    margin: 35px;">
+        <div class="box" >
+          <p id="cd1" style="text-align:center;font-family:Arial, Helvetica, sans-serif;"></p>
+          <p id="cd2" style="text-align:center;"></p>
+        </div>
+      </section>
+    
+  </body>
+</html> 
+ 
+ <script type='text/javascript'>  
+ var items = JSON.parse(`{{ items | tojson }}`); 
+  function setInteractive(map){
+  // get the vector provider from the base layer
+  var provider = map.getBaseLayer().getProvider();
+  // get the style object for the base layer
+  var style = provider.getStyle();
+ 
+  var changeListener = (evt) => {
+    if (style.getState() === H.map.Style.State.READY) {
+      style.removeEventListener('change', changeListener);
+ 
+      // enable interactions for the desired map features
+      style.setInteractive(['places', 'places.populated-places'], true);
+ 
+      // add an event listener that is responsible for catching the
+      // 'tap' event on the feature and showing the infobubble
+      provider.addEventListener('tap', onTap);
+    }
+  };
+  style.addEventListener('change', changeListener);
+}
+// Instantiate a map and platform object:
+var platform = new H.service.Platform({
+  'apikey': 'vtU0g5VK6cA3RZQSS0fcqx3vEGDdUMxkWE7MHkvDarE',
+    'app_id': 'pzBmVrAlgYSJ5xJXwq82'
+  });
+  // Retrieve the target element for the map:
+  var targetElement = document.getElementById('map');
+  
+  // Get the default map types from the platform object:
+  var defaultLayers = platform.createDefaultLayers();
+  
+  // Instantiate the map:
+  var map = new H.Map(
+    document.getElementById('map'),
+    defaultLayers.vector.normal.map,
+    {
+      zoom: 18,
+      center: { lat: 19.072742, lng: 72.9006 }
+    });
+  window.addEventListener('resize', () => map.getViewPort().resize());
+  var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+ 
+var bubble;
+/**
+ * @param {H.mapevents.Event} e The event object
+ */
+function onTap(evt) {
+  // calculate infobubble position from the cursor screen coordinates
+  let position = map.screenToGeo(
+    evt.currentPointer.viewportX,
+    evt.currentPointer.viewportY
+  );
+  // read the properties associated with the map feature that triggered the event
+  let props = evt.target.getData().properties;
+ 
+  // create a content for the infobubble
+  let content = '<div style="width:250px">It is a ' + props.kind + ' ' + (props.kind_detail || '') +
+    (props.population ? '<br /> population: ' + props.population : '') +
+    '<br /> local name is ' + props['name'] +
+    (props['name:ar'] ? '<br /> name in Arabic is '+ props['name:ar'] : '') + '</div>';
+ 
+  // Create a bubble, if not created yet
+  if (!bubble) {
+    bubble = new H.ui.InfoBubble(position, {
+      content: content
+    });
+    ui.addBubble(bubble);
+  } else {
+    // Reuse existing bubble object
+    bubble.setPosition(position);
+    bubble.setContent(content);
+    bubble.open();
+  }
+}
+ 
+// Now use the map as required...
+setInteractive(map);
+
+var x = document.getElementById("demo");
+var position_x;
+var position_y;
+var myposition;
+function getLocation() {
+  group5.removeAll();
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+  // Define a callback function to process the routing response:
+  var onResult = function(result) {
+    // ensure that at least one route was found
+    if (result.routes.length) {
+      result.routes[0].sections.forEach((section) => {
+           // Create a linestring to use as a point source for the route line
+          let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+  
+          // Create a polyline to display the route:
+          let routeLine = new H.map.Polyline(linestring, {
+            style: { strokeColor: 'blue', lineWidth: 3 }
+          });
+          var icon1= new H.map.Icon("http://maps.google.com/mapfiles/ms/icons/red-dot.png" );
+          var icon2= new H.map.Icon("http://maps.google.com/mapfiles/ms/icons/orange-dot.png" );
+          // Create a marker for the start point:
+          let startMarker = new H.map.Marker(section.departure.place.location,{icon: icon2});
+          // Create a marker for the end point:
+          let endMarker = new H.map.Marker(section.arrival.place.location,{icon: icon1});
+  
+          // Add the route polyline and the two markers to the map:
+          map.addObjects([routeLine, startMarker, endMarker]);
+  
+          // Set the map's viewport to make the whole route visible:
+          map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()});
+      });
+    }
+  };
+  
+  // Get an instance of the routing service version 8:
+  var router = platform.getRoutingService(null, 8);
+  
+    function showPosition(position) {
+      position_x= position.coords.latitude;
+      position_y= position.coords.longitude;
+      //x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
+      myposition=(position_x.toString()).concat(',',(position_y.toString()))
+      finalposition=(currm_x.toString()).concat(',',(currm_y.toString()))
+      console.log(myposition)
+      var routingParameters2 = {
+        'routingMode': 'fast',
+        'transportMode': 'car',
+        'origin': myposition,
+        'destination': finalposition,
+        'return': 'polyline'
+      };
+
+      router.calculateRoute(routingParameters2, onResult,
+      function(error) {
+        alert(error.message);
+      });
+ }
+ 
+const group1 = new H.map.Group();
+const group2 = new H.map.Group();
+const group3 = new H.map.Group();
+const group4 = new H.map.Group();
+const group5 = new H.map.Group();
+ 
+function myMap(){
+  if (document.getElementById("toggle-one").checked) {
+    for(var j=0;j<items.length;j++){
+    if(items[j][4]=='educational building'){
+    var coords;
+    var icon = new H.map.Icon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png" )
+    coords = {lat: parseFloat(items[j][0]) , lng:parseFloat(items[j][1])}
+    var coords1 = {lat: parseFloat(items[j][0]+0.00015) , lng:parseFloat(items[j][1])}
+    var currmarker = new H.map.Marker(coords, {icon: icon})
+    group1.addObject(currmarker);
+    map.addObject(group1);
+ 
+  (function (currmarker,j,coords,coords1){
+  var title =items[j][2];
+  var bubble;
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+  currmarker.addEventListener('pointerenter', function(evt) {
+    console.log(title)
+              bubble = new H.ui.InfoBubble(coords1, {
+              content:   "<div style = 'width:150px;min-height:20px'>" +title+ "</div>"
+            });
+            ui.addBubble(bubble);
+          }, false);
+    currmarker.addEventListener('pointerleave', function(evt) {
+            bubble.close();
+          }, false);
+          currmarker.addEventListener('tap', function(evt) {
+            
+            var imgsrc1=items[j][5];
+            var Clickeddp1= items[j][3];
+            var Clickeddp2= "</br><img src="+imgsrc1+">";
+            console.log(imgsrc1)
+        //document.getElementById('cd').innerHTML = Clickeddp;
+        document.getElementById('cd1').innerHTML = Clickeddp1;
+        document.getElementById('cd2').innerHTML = Clickeddp2;
+          }, false);
+  })(currmarker,j,coords,coords1);
+  };
+  }
+}
+else{
+  group1.removeAll()
+}
+//---------------------------------tog 2
+if (document.getElementById("toggle-two").checked) {
+    for(var j=0;j<items.length;j++){
+    if(items[j][4]=='hostel'){
+    var coords;
+    var icon = new H.map.Icon("http://maps.google.com/mapfiles/ms/icons/pink-dot.png" )
+    coords = {lat: parseFloat(items[j][0]) , lng:parseFloat(items[j][1])}
+    var coords2 = {lat: parseFloat(items[j][0]+0.00015) , lng:parseFloat(items[j][1])}
+    var currmarker = new H.map.Marker(coords, {icon: icon})
+    group2.addObject(currmarker);
+    map.addObject(group2);
+ 
+  (function (currmarker,j,coords,coords2){
+  var title =items[j][2];
+  var bubble;
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+  currmarker.addEventListener('pointerenter', function(evt) {
+    console.log(title)
+              bubble = new H.ui.InfoBubble(coords2, {
+              content:   "<div style = 'width:150px;min-height:20px'>" +title+ "</div>"
+            });
+            ui.addBubble(bubble);
+          }, false);
+    currmarker.addEventListener('pointerleave', function(evt) {
+            bubble.close();
+          }, false);
+          currmarker.addEventListener('tap', function(evt) {
+            
+            var imgsrc1=items[j][5];
+            var Clickeddp1= items[j][3];
+            var Clickeddp2= "</br><img src="+imgsrc1+">";
+            console.log(imgsrc1)
+        //document.getElementById('cd').innerHTML = Clickeddp;
+        document.getElementById('cd1').innerHTML = Clickeddp1;
+        document.getElementById('cd2').innerHTML = Clickeddp2;
+          }, false);
+  })(currmarker,j,coords,coords2);
+  };
+  }
+}
+else{
+  group2.removeAll()
+}
+//------------------tog3
+if (document.getElementById("toggle-three").checked) {
+    for(var j=0;j<items.length;j++){
+    if(items[j][4]=='canteen'){
+    var coords;
+    var icon = new H.map.Icon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png" )
+    coords = {lat: parseFloat(items[j][0]) , lng:parseFloat(items[j][1])}
+    var coords3 = {lat: parseFloat(items[j][0]+0.00015) , lng:parseFloat(items[j][1])}
+    var currmarker = new H.map.Marker(coords, {icon: icon})
+    group3.addObject(currmarker);
+    map.addObject(group3);
+ 
+  (function (currmarker,j,coords,coords3){
+  var title =items[j][2];
+  var bubble;
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+  currmarker.addEventListener('pointerenter', function(evt) {
+    console.log(title)
+              bubble = new H.ui.InfoBubble(coords3, {
+              content:   "<div style = 'width:150px;min-height:20px'>" +title+ "</div>"
+            });
+            ui.addBubble(bubble);
+          }, false);
+    currmarker.addEventListener('pointerleave', function(evt) {
+            bubble.close();
+          }, false);
+          currmarker.addEventListener('tap', function(evt) {
+            
+            var imgsrc1=items[j][5];
+            var Clickeddp1= items[j][3];
+            var Clickeddp2= "</br><img src="+imgsrc1+">";
+            console.log(imgsrc1)
+        //document.getElementById('cd').innerHTML = Clickeddp;
+        document.getElementById('cd1').innerHTML = Clickeddp1;
+        document.getElementById('cd2').innerHTML = Clickeddp2;
+          }, false);
+  })(currmarker,j,coords,coords3);
+  };
+  }
+}
+else{
+  group3.removeAll()
+}
+//---------tog4
+if (document.getElementById("toggle-four").checked) {
+    for(var j=0;j<items.length;j++){
+    if(items[j][4]=='sports'){
+    var coords;
+    var icon = new H.map.Icon("http://maps.google.com/mapfiles/ms/icons/green-dot.png" )
+    coords = {lat: parseFloat(items[j][0]) , lng:parseFloat(items[j][1])}
+    var coords4 = {lat: parseFloat(items[j][0]+0.00015) , lng:parseFloat(items[j][1])}
+    var currmarker = new H.map.Marker(coords, {icon: icon})
+    group4.addObject(currmarker);
+    map.addObject(group4);
+
+
+  (function (currmarker,j,coords,coords4){
+  var title =items[j][2];
+  var bubble;
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+  currmarker.addEventListener('pointerenter', function(evt) {
+    console.log(title)
+              bubble = new H.ui.InfoBubble(coords4, {
+              content:   "<div style = 'width:150px;min-height:20px'>" +title+ "</div>"
+            });
+            ui.addBubble(bubble);
+          }, false);
+    currmarker.addEventListener('pointerleave', function(evt) {
+            bubble.close();
+          }, false);
+          currmarker.addEventListener('tap', function(evt) {
+            
+            var imgsrc1=items[j][5];
+            var Clickeddp1= items[j][3];
+            var Clickeddp2= "</br><img src="+imgsrc1+">";
+            console.log(imgsrc1)
+        //document.getElementById('cd').innerHTML = Clickeddp;
+        document.getElementById('cd1').innerHTML = Clickeddp1;
+        document.getElementById('cd2').innerHTML = Clickeddp2;
+          }, false);
+  })(currmarker,j,coords,coords4);
+  };
+  }
+}
+else{
+  group4.removeAll()
+}
+} 
+//search fn
+var currm_x;
+var currm_y;
+for(var j=0;j<data.length;j++){
+    var coords;
+    var icon = new H.map.Icon("http://maps.google.com/mapfiles/ms/icons/red-dot.png" )
+    coords = {lat: parseFloat(data[j].x_coord) , lng:parseFloat(data[j].y_coord)}
+    coordshow = {lat: parseFloat(data[j].x_coord)+0.00015 , lng:parseFloat(data[j].y_coord)}
+    var currmarker = new H.map.Marker(coords, {icon: icon})
+    group5.addObject(currmarker);
+    map.addObject(group5);
+ 
+  (function (currmarker,j,coords,coordshow){
+  var title = data[j].name;
+  var bubble;
+  var ui = H.ui.UI.createDefault(map, defaultLayers);
+  currmarker.addEventListener('pointerenter', function(evt) {
+    console.log(title)
+              bubble = new H.ui.InfoBubble(coordshow, {
+              content:   "<div style = 'width:150px;min-height:20px'>" +title+ "</div>"
+            });
+            ui.addBubble(bubble);
+          }, false);
+    currmarker.addEventListener('pointerleave', function(evt) {
+            bubble.close();
+          }, false);
+    currmarker.addEventListener('tap', function(evt) {
+            currm_x=coords.lat;
+            currm_y=coords.lng;
+            console.log(currm_x)
+            getLocation();
+            var imgsrc=data[j].image;
+            var Clickeddp1= data[j].des;
+            var Clickeddp2= "</br><img src="+imgsrc+">";
+            console.log(data[j].image)
+        //document.getElementById('cd').innerHTML = Clickeddp;
+        document.getElementById('cd1').innerHTML = Clickeddp1;
+        document.getElementById('cd2').innerHTML = Clickeddp2;
+          }, false);
+  })(currmarker,j,coords,coordshow);
+}
+</script>
